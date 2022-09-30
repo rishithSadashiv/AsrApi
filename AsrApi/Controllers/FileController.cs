@@ -14,7 +14,7 @@ namespace AsrApi.Controllers
 
         [HttpPost]
         [Route("upload")]
-        public IActionResult UploadFile()
+        public bool UploadFile()
         {
             try
             {
@@ -30,20 +30,23 @@ namespace AsrApi.Controllers
                     {
                         Directory.CreateDirectory(folder);
                     }
-                    var filePath = Path.Combine(folder, fileName);
-                    postedFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                    var filePath = Path.Combine(folder, fileName);  
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        postedFile.CopyTo(fileStream);
+                    }
                 }
-                return StatusCode(200);
+                return true;
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return false;
             }
         }
 
         [HttpGet]
         [Route("delete")]
-        public IActionResult DeleteFile()
+        public bool DeleteFile()
         {
             try
             {
@@ -61,11 +64,11 @@ namespace AsrApi.Controllers
                     }
                 }
                 
-                return StatusCode(200);
+                return true;
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return false;
             }
             
         }
@@ -84,14 +87,14 @@ namespace AsrApi.Controllers
                 }
                 else
                 {
-                    output = ExecuteWindowsCommand("cd /;ls");
+                    //output = ExecuteWindowsCommand("cd /;ls");
                 }
 
-                return Ok(output);
+                return StatusCode(200, "विकिपीडिया:इण्टरनेट पर हिन्दी के साधन");
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, false); ;
             }
         }
 

@@ -104,7 +104,7 @@ namespace AsrApi.Controllers
         [Route("test")]
         public string NewMethod()
         {
-            return Environment.OSVersion.Platform.ToString();
+            return "API works";
         }
 
 
